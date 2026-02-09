@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.users import User
-from app.schemas.user import UserCreate, UserLogin
+from app.schemas.user import UserCreate
+from fastapi.security import OAuth2PasswordRequestForm
 from app.schemas.token import Token
 from app.core.hashing import hash_password, verify_password
 from app.core.security import create_access_token
@@ -32,10 +33,23 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return {"message": "User created"}
 
 @router.post("/login", response_model=Token)
-def login(data: UserLogin, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.mobile == data.mobile).first()
-    if not user or not verify_password(data.password, user.password):
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    # Swagger uses "username" → we map it to mobile
+    user = db.query(User).filter(User.mobile == form_data.username).first()
+
+    if not user or not verify_password(form_data.password, user.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    token = create_access_token({"sub": str(user.id), "mobile": user.mobile, "role": user.role})
-    return {"access_token": token, "token_type": "bearer"}
+    token = create_access_token({
+        "sub": str(user.id),
+        "mobile": user.mobile,
+        "role": user.role
+    })
+
+    return {
+        "access_token": token,
+        "token_type": "bearer"
+    }
