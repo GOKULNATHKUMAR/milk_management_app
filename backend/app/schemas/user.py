@@ -4,7 +4,8 @@ class UserCreate(BaseModel):
     name: str
     mobile: str
     password: str
-    role: str = "staff"
+    role: str # owner / milkman / owner_milkman
+    owner_id: int | None = None
 
 class UserLogin(BaseModel):
     mobile: str

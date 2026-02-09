@@ -19,12 +19,13 @@ def get_current_user(
 
         user_id = payload.get("sub")
         role = payload.get("role")
+        owner_id = payload.get("owner_id")
 
-        if not user_id or not role:
-            logger.warning("JWT payload missing sub or role")
+        if not user_id or not role or not owner_id:
+            logger.warning("JWT payload missing sub or role or owner_id")
             raise HTTPException(status_code=401, detail="Invalid token payload")
 
-        logger.info(f"JWT validated for user_id={user_id}, role={role}")
+        logger.info(f"JWT validated for user_id={user_id}, role={role}, owner_id={owner_id}")
 
     except JWTError as e:
         logger.error(f"JWT validation failed: {str(e)}")
@@ -39,20 +40,23 @@ def get_current_user(
         logger.warning(f"User not found for user_id={user_id}")
         raise HTTPException(status_code=404, detail="User not found")
 
+    # Attach owner context dynamically
+    user.owner_id = int(owner_id)
+    
     return user, role
 
 
 def milkman_only(user_role=Depends(get_current_user)):
     user, role = user_role
 
-    if role != "milkman":
+    if role not in ["milkman", "owner_milkman"]:
         logger.warning(
             f"Unauthorized role access attempt | user_id={user.id} | role={role}"
         )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only milkman allowed"
+            detail="Milkman access only"
         )
 
-    logger.info(f"Milkman access granted | user_id={user.id}")
+    logger.info(f"Milkman access granted | user_id={user.id} | owner_id={user.owner_id}")
     return user

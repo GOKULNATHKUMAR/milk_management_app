@@ -21,16 +21,22 @@ def get_db():
 def register(user: UserCreate, db: Session = Depends(get_db)):
     if db.query(User).filter(User.mobile == user.mobile).first():
         raise HTTPException(status_code=400, detail="Mobile already registered")
-
+    # Role validation
+    if user.role == "milkman" and not user.owner_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Milkman must be linked to an owner"
+        )
     new_user = User(
         name=user.name,
         mobile=user.mobile,
         password=hash_password(user.password),
-        role=user.role
+        role=user.role,
+        owner_id=user.owner_id
     )
     db.add(new_user)
     db.commit()
-    return {"message": "User created"}
+    return {"message": "User created successfully"}
 
 @router.post("/login", response_model=Token)
 def login(
@@ -46,7 +52,8 @@ def login(
     token = create_access_token({
         "sub": str(user.id),
         "mobile": user.mobile,
-        "role": user.role
+        "role": user.role,
+        "owner_id": user.owner_id or user.id  # KEY LINE
     })
 
     return {
