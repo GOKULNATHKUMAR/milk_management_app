@@ -12,6 +12,7 @@ class MilkIntake(Base):
     quantity_liters = Column(Float, nullable=False)
     rate_per_liter = Column(Float, nullable=False)
     total_amount = Column(Float, nullable=False)
-
+    # NEW: Business owner
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_by = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
