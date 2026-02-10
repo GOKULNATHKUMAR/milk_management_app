@@ -13,6 +13,7 @@ class MilkSale(Base):
     quantity_liters = Column(Float, nullable=False)
     sale_rate = Column(Float, nullable=False)
     total_amount = Column(Float, nullable=False)
-
+    
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_by = Column(Integer, ForeignKey("users.id"))
     created_at = Column(Date, server_default=func.current_date())

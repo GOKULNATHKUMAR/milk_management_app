@@ -20,6 +20,8 @@ class MilkIntakeResponse(BaseModel):
     quantity_liters: float
     rate_per_liter: float
     total_amount: float
+    owner_id: int          # optional
+    created_by: int        # optional
 
     class Config:
         from_attributes = True

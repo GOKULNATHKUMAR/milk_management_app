@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from app.database import Base
 
 class User(Base):
@@ -8,5 +8,10 @@ class User(Base):
     name = Column(String, nullable=False)
     mobile = Column(String, unique=True, index=True)
     password = Column(String, nullable=False)
-    role = Column(String, default="staff")  # owner / staff
+    # owner | milkman | owner_milkman
+    role = Column(String, default="milkman")
+    # If milkman → points to owner.id
+    # If owner / owner_milkman → NULL
+    owner_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     language = Column(String, default="ta")
+    is_active = Column(Boolean, default=True)

@@ -6,6 +6,7 @@ from app.schemas.milk_sales import MilkSaleCreate, MilkSaleResponse
 from app.models.milk_sales import MilkSale
 from app.models.milk_intake import MilkIntake
 from app.deps import milkman_only
+from app.models.users import User
 
 router = APIRouter(prefix="/milk-sales", tags=["Milk Sales"])
 
@@ -13,34 +14,36 @@ router = APIRouter(prefix="/milk-sales", tags=["Milk Sales"])
 def add_milk_sale(
     data: MilkSaleCreate,
     db: Session = Depends(get_db),
-    user = Depends(milkman_only)
+    user: User = Depends(milkman_only)
 ):
     # Get total intake for that date & session
     intake = db.query(MilkIntake).filter(
         MilkIntake.date == data.date,
         MilkIntake.session == data.session.lower(),
-        MilkIntake.created_by == user.id
+        MilkIntake.owner_id == user.owner_id
     ).first()
     print("Intake found:", intake)
 
     if not intake:
         raise HTTPException(status_code=400, detail="No milk intake found")
 
-    # Calculate already sold milk
-    sold_qty = db.query(MilkSale).filter(
+    # Calculate already sold milk for OWNER
+    sold_qty = db.query(
+        func.coalesce(func.sum(MilkSale.quantity_liters), 0)
+    ).filter(
         MilkSale.date == data.date,
         MilkSale.session == data.session.lower(),
-        MilkIntake.created_by == user.id
-    ).with_entities(
-        func.coalesce(func.sum(MilkSale.quantity_liters), 0)
+        MilkSale.owner_id == user.owner_id
     ).scalar()
 
+    # Validate availability
     if sold_qty + data.quantity_liters > intake.quantity_liters:
         raise HTTPException(
             status_code=400,
             detail="Not enough milk available"
         )
 
+    # Create sale
     total = data.quantity_liters * data.sale_rate
 
     sale = MilkSale(
@@ -50,6 +53,7 @@ def add_milk_sale(
         quantity_liters=data.quantity_liters,
         sale_rate=data.sale_rate,
         total_amount=total,
+        owner_id=user.owner_id,
         created_by=user.id
     )
 
