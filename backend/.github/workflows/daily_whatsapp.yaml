@@ -1,0 +1,16 @@
+name: Daily WhatsApp Summary
+
+on:
+  schedule:
+    - cron: "30 15 * * *"   # 9:00 PM IST
+  workflow_dispatch:       # Manual trigger option
+
+jobs:
+  send-summary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call Daily Summary API
+        run: |
+          curl -X POST "${{ secrets.API_URL }}/summary/daily" \
+          -H "Authorization: Bearer ${{ secrets.CRON_TOKEN }}"

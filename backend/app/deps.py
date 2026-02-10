@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Header
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 from app.database import get_db
@@ -6,6 +6,8 @@ from app.models.users import User
 from app.core.security import SECRET_KEY, ALGORITHM
 from app.core.logger import logger
 from fastapi.security import OAuth2PasswordBearer
+
+from app.core.config import CRON_SECRET
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
@@ -60,3 +62,14 @@ def milkman_only(user_role=Depends(get_current_user)):
 
     logger.info(f"Milkman access granted | user_id={user.id} | owner_id={user.owner_id}")
     return user
+
+def cron_only(authorization: str = Header(...)):
+    """
+    Used only by GitHub Actions / Scheduler
+    """
+    if authorization != f"Bearer {CRON_SECRET}":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid cron token"
+        )
+    return True
