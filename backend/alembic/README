@@ -1,0 +1,9 @@
+Generic single-database configuration.
+
+
+
+alembic revision --autogenerate -m "add owner_id to milk tables"
+alembic upgrade head
+alembic current
+alembic history
+alembic downgrade -1   ---      Rollback if mistake:
