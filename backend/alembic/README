@@ -1,0 +1,156 @@
+Generic single-database configuration.
+
+
+
+alembic revision --autogenerate -m "add owner_id to milk tables"
+alembic upgrade head
+alembic current
+alembic history
+alembic downgrade -1   ---      Rollback if mistake:
+
+
+📁 Expected Backend Structure (Your Case)
+backend/
+├── app/
+│   ├── main.py
+│   ├── database.py
+│   ├── core/
+│   │   └── config.py
+│   ├── models/
+│   │   ├── users.py
+│   │   ├── milk_intake.py
+│   │   ├── milk_sales.py
+│   │   └── __init__.py
+│   └── routers/
+├── alembic/
+│   ├── versions/
+│   └── env.py
+├── alembic.ini
+└── requirements.txt
+
+🧱 STEP 1: Install Alembic
+
+Activate virtual env first 👇
+
+pip install alembic
+
+
+Add to requirements.txt:
+
+alembic
+
+🧱 STEP 2: Initialize Alembic (One Time)
+
+Run from backend root:
+
+alembic init alembic
+
+
+Creates:
+
+alembic/
+alembic.ini
+
+🧱 STEP 3: Centralize DB URL (IMPORTANT)
+app/core/config.py
+import os
+
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+psycopg2://postgres:password@localhost:5432/milk_db"
+)
+
+app/database.py
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
+from app.core.config import DATABASE_URL
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(bind=engine)
+
+Base = declarative_base()
+
+
+🚫 Do NOT use Base.metadata.create_all() anymore
+
+🧱 STEP 4: Wire Alembic to Your Models
+alembic/env.py (MOST IMPORTANT FILE)
+
+Replace content with this safe version 👇
+
+from logging.config import fileConfig
+from sqlalchemy import engine_from_config, pool
+from alembic import context
+
+from app.database import Base
+from app.core.config import DATABASE_URL
+
+# Import ALL models here
+from app.models import users, milk_intake, milk_sales
+
+config = context.config
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
+
+if config.config_file_name:
+    fileConfig(config.config_file_name)
+
+target_metadata = Base.metadata
+
+
+def run_migrations_offline():
+    context.configure(
+        url=DATABASE_URL,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        compare_type=True
+    )
+
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+def run_migrations_online():
+    connectable = engine_from_config(
+        config.get_section(config.config_ini_section),
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_type=True
+        )
+
+        with context.begin_transaction():
+            context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
+
+🧱 STEP 5: Register Models (CRITICAL)
+app/models/__init__.py
+from .users import User
+from .milk_intake import MilkIntake
+from .milk_sales import MilkSale
+
+
+Without this → Alembic won’t detect changes ❌
+
+🧱 STEP 6: First Migration (Baseline)
+
+If DB already exists:
+
+alembic revision --autogenerate -m "baseline schema"
+
+
+Then:
+
+alembic upgrade head
+
+
+This syncs DB to current models.

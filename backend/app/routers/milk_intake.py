@@ -20,6 +20,7 @@ def add_milk_intake(
     intake = MilkIntake(
         date=data.date,
         session=data.session.lower(),
+        customer_name=data.customer_name,
         quantity_liters=data.quantity_liters,
         rate_per_liter=data.rate_per_liter,
         total_amount=total,

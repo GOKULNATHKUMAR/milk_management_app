@@ -8,7 +8,7 @@ class MilkIntake(Base):
     id = Column(Integer, primary_key=True, index=True)
     date = Column(Date, nullable=False)
     session = Column(String, nullable=False)  # morning / evening
-
+    customer_name = Column(String(100), nullable=False)
     quantity_liters = Column(Float, nullable=False)
     rate_per_liter = Column(Float, nullable=False)
     total_amount = Column(Float, nullable=False)

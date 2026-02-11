@@ -11,7 +11,7 @@ app.include_router(milk_sales.router)
 app.include_router(daily_summary.router)
 app.include_router(reports.router)
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def health():
