@@ -4,6 +4,7 @@ from datetime import date
 class MilkIntakeCreate(BaseModel):
     date: date
     session: str   # morning / evening
+    customer_name: str
     quantity_liters: float
     rate_per_liter: float
 
@@ -17,6 +18,7 @@ class MilkIntakeResponse(BaseModel):
     id: int
     date: date
     session: str
+    customer_name: str
     quantity_liters: float
     rate_per_liter: float
     total_amount: float
