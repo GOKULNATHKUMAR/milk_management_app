@@ -44,16 +44,15 @@ def get_current_user(
 
     # Attach owner context dynamically
     user.owner_id = int(owner_id)
-    
-    return user, role
+    user.role = role
+    return user
 
 
-def milkman_only(user_role=Depends(get_current_user)):
-    user, role = user_role
+def milkman_only(user: User = Depends(get_current_user)):
 
-    if role not in ["milkman", "owner_milkman"]:
+    if user.role not in ["milkman", "owner_milkman"]:
         logger.warning(
-            f"Unauthorized role access attempt | user_id={user.id} | role={role}"
+            f"Unauthorized role access attempt | user_id={user.id} | role={user.role}"
         )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -62,6 +61,20 @@ def milkman_only(user_role=Depends(get_current_user)):
 
     logger.info(f"Milkman access granted | user_id={user.id} | owner_id={user.owner_id}")
     return user
+
+def owner_only(user: User = Depends(get_current_user)):
+
+    if user.role not in ["owner", "owner_milkman"]:
+        logger.warning(
+            f"Unauthorized role access attempt | user_id={user.id} | role={user.role}"
+        )
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Owner access only"
+        )
+    logger.info(f"Owner access granted | user_id={user.id} | owner_id={user.owner_id}")
+    return user
+
 
 def cron_only(authorization: str = Header(...)):
     """

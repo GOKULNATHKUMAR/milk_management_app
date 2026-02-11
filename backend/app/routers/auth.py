@@ -22,17 +22,18 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     if db.query(User).filter(User.mobile == user.mobile).first():
         raise HTTPException(status_code=400, detail="Mobile already registered")
     # Role validation
-    if user.role == "milkman" and not user.owner_id:
+    if user.role in ["milkman", "owner_milkman"] and not user.owner_id:
         raise HTTPException(
             status_code=400,
-            detail="Milkman must be linked to an owner"
+            detail=f"{user.role} must be linked to an owner"
         )
     new_user = User(
         name=user.name,
         mobile=user.mobile,
         password=hash_password(user.password),
         role=user.role,
-        owner_id=user.owner_id
+        owner_id=user.owner_id,
+        language=user.language
     )
     db.add(new_user)
     db.commit()
