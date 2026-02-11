@@ -5,6 +5,7 @@ class UserCreate(BaseModel):
     mobile: str
     password: str
     role: str # owner / milkman / owner_milkman
+    language: str | None = "ta"
     owner_id: int | None = None
 
 class UserLogin(BaseModel):
