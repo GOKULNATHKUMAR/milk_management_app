@@ -9,8 +9,21 @@ export class Auth {
 
   constructor(private http: HttpClient) {}
 
-  login(data: any) {
-    return this.http.post(`${this.api}/auth/login`, data);
+  login(username: string, password: string) {
+
+  const body = new URLSearchParams();
+  body.set('username', username);
+  body.set('password', password);
+
+  return this.http.post(
+    `${this.api}/auth/login`,
+    body.toString(),
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+    );
   }
 
   saveToken(token: string) {
