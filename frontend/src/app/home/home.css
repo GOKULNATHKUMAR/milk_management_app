@@ -3,25 +3,41 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f4f6f9;
+
+  /* Background image */
+  background: url('/application_background.jpg') no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+
+/* Dark overlay for readability */
+.home-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .card {
-  background: white;
+  position: relative;   /* important */
+  background: rgba(255, 255, 255, 0.95);
   padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   text-align: center;
-  width: 400px;
+  width: 420px;
 }
 
 h1 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  font-size: 28px;
+  color: #2c3e50;
 }
 
 p {
-  color: #666;
+  color: #555;
   margin-bottom: 30px;
+  font-size: 15px;
 }
 
 .button-group {
@@ -34,8 +50,9 @@ p {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  width: 120px;
+  width: 130px;
   font-size: 14px;
+  transition: all 0.3s ease;
 }
 
 .primary {
@@ -43,7 +60,15 @@ p {
   color: white;
 }
 
+.primary:hover {
+  background-color: #1c6ed5;
+}
+
 .secondary {
   background-color: #6c757d;
   color: white;
+}
+
+.secondary:hover {
+  background-color: #5a6268;
 }
