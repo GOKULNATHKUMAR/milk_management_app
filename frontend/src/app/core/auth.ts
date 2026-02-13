@@ -26,6 +26,10 @@ export class Auth {
     );
   }
 
+  register(data: any) {
+    return this.http.post(`${this.api}/auth/register`, data);
+  }
+  
   saveToken(token: string) {
     localStorage.setItem('token', token);
   }
