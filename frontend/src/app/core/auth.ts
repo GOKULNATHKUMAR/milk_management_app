@@ -26,9 +26,9 @@ export class Auth {
     );
   }
 
-  register(data: any) {
-    return this.http.post(`${this.api}/auth/register`, data);
-  }
+  registerOwner(data: any) {
+  return this.http.post(`${this.api}/auth/register-owner`, data);
+}
   
   saveToken(token: string) {
     localStorage.setItem('token', token);
