@@ -1,0 +1,74 @@
+.home-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Background image */
+  background: url('/application_background.jpg') no-repeat center center;
+  background-size: cover;
+  position: relative;
+}
+
+/* Dark overlay for readability */
+.home-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.card {
+  position: relative;   /* important */
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  text-align: center;
+  width: 420px;
+}
+
+h1 {
+  margin-bottom: 15px;
+  font-size: 28px;
+  color: #2c3e50;
+}
+
+p {
+  color: #555;
+  margin-bottom: 30px;
+  font-size: 15px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 130px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.primary {
+  background-color: #2d89ef;
+  color: white;
+}
+
+.primary:hover {
+  background-color: #1c6ed5;
+}
+
+.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.secondary:hover {
+  background-color: #5a6268;
+}
