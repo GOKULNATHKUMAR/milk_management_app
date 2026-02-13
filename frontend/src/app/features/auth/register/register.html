@@ -1,1 +1,34 @@
-<p>register works!</p>
+<h2>Register</h2>
+
+<input [(ngModel)]="name" placeholder="Name">
+
+<input [(ngModel)]="mobile" placeholder="Mobile Number">
+
+<input [(ngModel)]="password" type="password" placeholder="Password">
+
+<input [(ngModel)]="confirmPassword" type="password" placeholder="Confirm Password">
+
+<!-- Role Dropdown -->
+<select [(ngModel)]="role">
+  <option value="owner">Owner</option>
+  <option value="milkman">Milkman</option>
+  <option value="owner_milkman">Owner + Milkman</option>
+</select>
+
+<!-- Owner ID (Only if Milkman) -->
+<div *ngIf="role === 'milkman'">
+  <input [(ngModel)]="owner_id" type="number" placeholder="Owner ID">
+</div>
+
+<!-- Language -->
+<select [(ngModel)]="language">
+  <option value="ta">Tamil</option>
+  <option value="en">English</option>
+</select>
+
+<button (click)="register()">Register</button>
+
+<p>
+  Already have account?
+  <a routerLink="/login">Login here</a>
+</p>
