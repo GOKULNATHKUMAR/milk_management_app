@@ -89,7 +89,7 @@ def login(
         "role": user.role,
         "owner_id": user.owner_id or user.id  # KEY LINE
     })
-
+    #print(f"Generated token for user {user.role} (ID: {user.id}): {token}")
     return {
         "access_token": token,
         "token_type": "bearer",
