@@ -25,10 +25,21 @@ export class Login {
       return;
     }
   this.auth.login(this.username, this.password)
-    .subscribe((res: any) => {
+    .subscribe({
+  next:(res: any) => {
       this.auth.saveToken(res.access_token);
-      alert('Login successful');
-      this.router.navigate(['/']);
+      localStorage.setItem('role', res.role);
+    localStorage.setItem('user_id', res.user_id);
+
+    if (res.role === 'owner') {
+      this.router.navigate(['/owner']);
+    } else if (res.role === 'milkman') {
+      this.router.navigate(['/milkman']);
+    }
+  },
+  error: () => {
+    alert("Invalid Credentials");
+  }
     });
 }
 }
