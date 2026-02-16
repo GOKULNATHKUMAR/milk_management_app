@@ -1,13 +1,18 @@
 from pydantic import BaseModel
 
-class UserCreate(BaseModel):
+class OwnerRegister(BaseModel):
     name: str
     mobile: str
     password: str
-    role: str # owner / milkman / owner_milkman
     language: str | None = "ta"
-    owner_id: int | None = None
+    is_milkman: bool = False   # if owner also collects milk
 
+class MilkmanCreate(BaseModel):
+    name: str
+    mobile: str
+    password: str
+    language: str | None = "ta"
+    
 class UserLogin(BaseModel):
     mobile: str
     password: str
