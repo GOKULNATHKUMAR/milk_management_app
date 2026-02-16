@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Auth } from '../../../core/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
@@ -15,9 +16,8 @@ export class Register {
   mobile = '';
   password = '';
   confirmPassword = '';
-  role = 'owner';   // default
   language = 'ta';
-  owner_id: number | null = null;
+  is_milkman = false;   // if owner also collects milk
 
   constructor(
     private authService: Auth,
@@ -39,14 +39,13 @@ export class Register {
       name: this.name,
       mobile: this.mobile,
       password: this.password,
-      role: this.role,
       language: this.language,
-      owner_id: this.role === 'milkman' ? this.owner_id : null
+      is_milkman: this.is_milkman
     };
 
-    this.authService.register(payload).subscribe({
+    this.authService.registerOwner(payload).subscribe({
       next: () => {
-        alert("Registration Successful");
+        alert("ROwner Registered Successfully");
         this.router.navigate(['/login']);
       },
       error: (err) => {

@@ -1,34 +1,63 @@
-<h2>Register</h2>
+<div class="register-container">
+  <div class="register-card">
+    <!-- Back Button -->
+    <div class="back-link">
+      <a routerLink="/">← Back to Home</a>
+    </div>
+    <h2>Owner Registration 🐄</h2>
+    <p class="subtitle">Create your dairy management account</p>
 
-<input [(ngModel)]="name" placeholder="Name">
+    <form (ngSubmit)="register()">
 
-<input [(ngModel)]="mobile" placeholder="Mobile Number">
+      <input 
+        type="text"
+        placeholder="Full Name"
+        [(ngModel)]="name"
+        name="name"
+        required
+      />
 
-<input [(ngModel)]="password" type="password" placeholder="Password">
+      <input 
+        type="text"
+        placeholder="Mobile Number"
+        [(ngModel)]="mobile"
+        name="mobile"
+        required
+      />
 
-<input [(ngModel)]="confirmPassword" type="password" placeholder="Confirm Password">
+      <input 
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+        name="password"
+        required
+      />
 
-<!-- Role Dropdown -->
-<select [(ngModel)]="role">
-  <option value="owner">Owner</option>
-  <option value="milkman">Milkman</option>
-  <option value="owner_milkman">Owner + Milkman</option>
-</select>
+      <input 
+        type="password"
+        placeholder="Confirm Password"
+        [(ngModel)]="confirmPassword"
+        name="confirmPassword"
+        required
+      />
 
-<!-- Owner ID (Only if Milkman) -->
-<div *ngIf="role === 'milkman'">
-  <input [(ngModel)]="owner_id" type="number" placeholder="Owner ID">
+      <label class="checkbox">
+        <input 
+          type="checkbox"
+          [(ngModel)]="is_milkman"
+          name="is_milkman"
+        />
+        I also collect milk
+      </label>
+
+      <button type="submit">Register</button>
+
+    </form>
+
+    <p class="login-link">
+      Already have an account?
+      <a routerLink="/login">Login</a>
+    </p>
+
+  </div>
 </div>
-
-<!-- Language -->
-<select [(ngModel)]="language">
-  <option value="ta">Tamil</option>
-  <option value="en">English</option>
-</select>
-
-<button (click)="register()">Register</button>
-
-<p>
-  Already have account?
-  <a routerLink="/login">Login here</a>
-</p>
