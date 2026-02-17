@@ -88,6 +88,29 @@ def get_milkmen(
 
     return milkmen
 
+@router.delete("/milkman/{milkman_id}")
+def delete_milkman(
+    milkman_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    if current_user.role != "owner":
+        raise HTTPException(status_code=403, detail="Only owner can delete milkman")
+
+    milkman = db.query(User).filter(
+        User.id == milkman_id,
+        User.owner_id == current_user.id
+    ).first()
+
+    if not milkman:
+        raise HTTPException(status_code=404, detail="Milkman not found")
+
+    db.delete(milkman)
+    db.commit()
+
+    return {"message": "Milkman deleted successfully"}
+
 @router.post("/login", response_model=Token)
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
