@@ -72,6 +72,22 @@ def add_milkman(
 
     return {"message": "Milkman added successfully"}
 
+@router.get("/milkmen")
+def get_milkmen(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    if current_user.role != "owner":
+        raise HTTPException(status_code=403, detail="Only owner can view milkmen")
+
+    milkmen = db.query(User).filter(
+        User.owner_id == current_user.id,
+        User.role == "milkman"
+    ).all()
+
+    return milkmen
+
 @router.post("/login", response_model=Token)
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
