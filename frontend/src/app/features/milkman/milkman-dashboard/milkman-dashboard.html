@@ -1,7 +1,17 @@
-<div class="dashboard">
-      <h2>Milkman Dashboard 🥛</h2>
+<div class="layout">
+  
+  <aside class="sidebar">
+    <h2 class="logo">Milkman Panel</h2>
 
-      <p>Welcome Milkman!</p>
+    <nav>
+      <a routerLink="intake" routerLinkActive="active">Milk Intake</a>
+      <a routerLink="sales" routerLinkActive="active">Milk Sales</a>
+    </nav>
+    <button (click)="logout()">Logout</button>
+  </aside>
 
-      <button (click)="logout()">Logout</button>
-    </div>
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
