@@ -1,7 +1,21 @@
-<div class="dashboard">
-      <h2>Owner Dashboard 🐄</h2>
+<div class="layout">
+  
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">Owner Panel</h2>
 
-      <p>Welcome Owner!</p>
+    <nav>
+      <a routerLink="milkman" routerLinkActive="active">Milkman Management</a>
+      <a routerLink="intake" routerLinkActive="active">Milk Intake</a>
+      <a routerLink="sales" routerLinkActive="active">Milk Sales</a>
+      <a routerLink="reports" routerLinkActive="active">Reports</a>
+      <a routerLink="whatsapp" routerLinkActive="active">WhatsApp Summary</a>
+    </nav>
+    <button (click)="logout()">Logout</button>
+  </aside>
 
-      <button (click)="logout()">Logout</button>
-    </div>
+  <!-- Content Area -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
