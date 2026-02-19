@@ -1,1 +1,42 @@
-<p>milkman-management works!</p>
+<!-- <pre>{{ milkmen | json }}</pre> -->
+<h2>Milkman Management</h2>
+
+<div class="form-card">
+  <h3>Add Milkman</h3>
+
+  <input type="text" placeholder="Name" [(ngModel)]="newMilkman.name">
+  <input type="text" placeholder="Mobile" [(ngModel)]="newMilkman.mobile">
+  <input type="password" placeholder="Password" [(ngModel)]="newMilkman.password">
+
+  <select [(ngModel)]="newMilkman.language">
+    <option value="en">English</option>
+    <option value="ta">Tamil</option>
+  </select>
+
+  <button (click)="addMilkman()">Add Milkman</button>
+</div>
+
+<hr>
+
+<h3>Milkman List</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Mobile</th>
+      <th>Language</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let m of milkmen">
+      <td>{{ m.name }}</td>
+      <td>{{ m.mobile }}</td>
+      <td>{{ m.language }}</td>
+      <td>
+        <button (click)="deleteMilkman(m.id)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
