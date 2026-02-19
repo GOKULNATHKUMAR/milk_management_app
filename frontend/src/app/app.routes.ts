@@ -28,23 +28,15 @@ export const routes: Routes = [
   data: { role: 'owner' },
   loadComponent: () =>
     import('./features/owner/owner-dashboard/owner-dashboard')
-      .then(m => m.OwnerDashboard)
-},
-
-{
-  path: 'milkman',
-  canActivate: [authGuard, roleGuard],
-  data: { role: 'milkman' },
-  loadComponent: () =>
-    import('./features/milkman/milkman-dashboard/milkman-dashboard')
-      .then(m => m.MilkmanDashboard)
-},
-{
-  path: 'owner',
-  component: OwnerDashboard,
+      .then(m => m.OwnerDashboard),
   children: [
+    // {
+    //   path: '',
+    //   redirectTo: 'milkman',
+    //   pathMatch: 'full'
+    // },
     {
-      path: 'milkman',
+      path: 'milkman_management',
       loadComponent: () =>
         import('./features/owner/milkman-management/milkman-management')
           .then(m => m.MilkmanManagement)
@@ -75,9 +67,14 @@ export const routes: Routes = [
     }
   ]
 },
+
 {
   path: 'milkman',
-  component: MilkmanDashboard,
+  canActivate: [authGuard, roleGuard],
+  data: { role: 'milkman' },
+  loadComponent: () =>
+    import('./features/milkman/milkman-dashboard/milkman-dashboard')
+      .then(m => m.MilkmanDashboard),
   children: [
     {
       path: 'intake',

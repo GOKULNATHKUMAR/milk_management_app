@@ -1,0 +1,30 @@
+.form-card {
+  /* background: white; */
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+input, select {
+  display: block;
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 250px;
+}
+
+button {
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: red;
+}
+
+table {
+  width: 100%;
+  /* background: white; */
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
