@@ -28,8 +28,17 @@
   background-color: #334155;
 }
 
-.content {
+/* .content {
   flex: 1;
   padding: 20px;
   background-color: #f1f5f9;
+} */
+.content {
+  flex: 1;
+  padding: 20px;
+
+  background-image: url('/application_register.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
